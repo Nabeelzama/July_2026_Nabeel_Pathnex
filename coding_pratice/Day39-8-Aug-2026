@@ -9,10 +9,10 @@
 
 
   vars:
-    pathnex_packages:
-      - tree
-      - unzip
-      - vim
+  pathnex_packages:
+    - tree
+    - unzip
+    - vim
 
   tasks:
     - name: Install required packages
@@ -56,6 +56,7 @@ spec:
         - name: web
           image: nginx
           livenessProbe:
+
             httpGet:
                 path: /
                 port: 80
@@ -103,25 +104,22 @@ pipeline {
             when {
                 branch 'main'
             }
-            steps ('Build') {
-                when {
-                    branch 'main'
-                }
-                steps {
-                    sh'mvn clean compile'
-                }
-            }
-            stage('Deploy') {
-                when {
-                    expression { params.ENVIRONMENT == 'dev' }
-                }
-                steps {
-                    sh 'echo "Deploying to $ENVIRONMENT by $INSTITUTE_NAME"'
-                }
+            
+            steps {
+                sh 'mvn clean compile'
             }
         }
-    }   
-}
+        stage('Deploy') {
+            when {
+                expression { params.ENVIRONMENT == 'dev' }
+            }
+            steps {
+                sh 'echo "Deploying to $ENVIRONMENT by $INSTITUTE_NAME"'
+            }
+        }
+    }
+}   
+
 
 ##  GitLab CI - Conditional Jobs
 You will learn how to **run jobs based on variables or branches**
